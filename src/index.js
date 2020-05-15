@@ -1,2 +1,2 @@
-import './module.js';
-import './scss/index.scss'
+// import './module.js';
+require('./scss/index.scss');
