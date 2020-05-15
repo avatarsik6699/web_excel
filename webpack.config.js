@@ -1,7 +1,7 @@
-const path = require('path')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const HTMLWebpackPlugin = require('html-webpack-plugin')
-const CopyPlugin = require('copy-webpack-plugin')
+const path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const HTMLWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -19,9 +19,9 @@ const jsLoaders = () => {
         }
     ]
 
-    if (isDev) {
-        loaders.push('eslint-loader');
-    }
+    // if (isDev) {
+    //     loaders.push('eslint-loader');
+    // }
     return loaders;
 };
 
@@ -43,11 +43,11 @@ module.exports = {
             '@core': path.resolve(__dirname, 'src'),
         },
     },
-    devtool: isDev ? 'source-map' : false,
+    devtool: 'source-map',
     devServer: {
-        contentBase: path.join(__dirname, 'dist'),
-        port: 3000,
-        hot: isDev,
+        // contentBase: path.join(__dirname, 'dist'),
+        port: 2900,
+        hot: true,
     },
     plugins: [
         new CleanWebpackPlugin(),
@@ -65,7 +65,7 @@ module.exports = {
             },
         ]),
         new MiniCssExtractPlugin({
-            filename: filename(`css`),
+            filename: filename('css'),
         }),
     ],
     module: {
@@ -80,8 +80,22 @@ module.exports = {
                             reloadAll: true,
                         },
                     },
-                    'css-loader',
-                    'sass-loader',
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            sourceMap: true,
+                        },
+                    },
+                    {
+                        loader: 'resolve-url-loader',
+                    },
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            sourceMap: true,
+
+                        }
+                    }
                 ],
             },
 
@@ -90,7 +104,19 @@ module.exports = {
                 exclude: /node_modules/,
                 use: jsLoaders(),
 
-            }
+            },
+            {
+                test: /\.(png|svg|jpg|gif)$/,
+                use: [
+                    'file-loader',
+                ],
+            },
+            {
+                test: /\.(woff|woff2|eot|ttf|otf)$/,
+                use: [
+                    'file-loader',
+                ],
+            },
         ],
     },
 };
